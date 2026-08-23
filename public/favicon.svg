@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Codebase Bloat Tax">
+  <rect width="64" height="64" rx="12" fill="#0B0C10"/>
+  <rect x="14" y="16" width="22" height="30" rx="2" fill="#1F2833" stroke="#45A29E"/>
+  <line x1="18" y1="24" x2="32" y2="24" stroke="#66FCF1" stroke-width="1.5"/>
+  <line x1="18" y1="30" x2="30" y2="30" stroke="#45A29E" stroke-width="1.5"/>
+  <circle cx="46" cy="22" r="4" fill="#66FCF1"/>
+  <circle cx="50" cy="36" r="4" fill="#45A29E"/>
+  <circle cx="40" cy="44" r="3.5" fill="#66FCF1"/>
+  <path d="M46 22 L50 36 L40 44" fill="none" stroke="#45A29E" stroke-width="1.5"/>
+</svg>

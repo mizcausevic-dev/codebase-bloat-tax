@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en" data-theme="cosmic" data-mode="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Codebase Bloat Tax — analysis pipeline</title>
+  <style>
+    :root {
+      --bg:#0B0C10; --panel:#1F2833; --text:#C5C6C7; --muted:#8b9198;
+      --line:#2d3946; --accent:#66FCF1; --accent2:#45A29E;
+      --font: "Segoe UI", system-ui, sans-serif;
+    }
+    html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);min-height:100%}
+    .bar{display:flex;flex-wrap:wrap;gap:8px;padding:16px 20px;border-bottom:1px solid var(--line);align-items:center}
+    select,button{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+    main{width:min(980px,calc(100% - 32px));margin:24px auto 64px}
+    h1{font-size:1.4rem}
+    .grid{display:grid;gap:12px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+    .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+    .node{background:color-mix(in srgb,var(--accent) 14%, var(--panel));border:1px solid var(--accent2);padding:8px 10px;border-radius:10px}
+    .tier{display:grid;grid-template-columns:48px 1fr;gap:10px;margin:8px 0}
+    .n{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#04120f;font-weight:700}
+    .muted{color:var(--muted)}
+    code{font-size:.86em}
+    html[data-theme="bento"][data-mode="dark"]{--bg:#0f1412;--panel:#18201c;--accent:#7dce9a;--accent2:#9ad4c4;--text:#e8f0ea;--line:#2a3831}
+    html[data-theme="swiss"][data-mode="dark"]{--bg:#111;--panel:#1c1c1c;--accent:#ff5a1f;--accent2:#d6d6d6;--text:#f2f2f2;--line:#333}
+    html[data-theme="aqua"][data-mode="dark"]{--bg:#08202b;--panel:#0e3140;--accent:#3ec7ff;--accent2:#2cb5c7;--text:#d7f3ff;--line:#1b4a5e}
+    html[data-theme="brutalist"][data-mode="dark"]{--bg:#140814;--panel:#241028;--accent:#ff2d95;--accent2:#ffe14a;--text:#ffe8f4;--line:#4a1f45}
+    html[data-theme="steel"][data-mode="dark"]{--bg:#161412;--panel:#211c18;--accent:#d9773a;--accent2:#8fb4c7;--text:#f3ece2;--line:#3a322b}
+    html[data-theme="parchment"][data-mode="dark"]{--bg:#1b1710;--panel:#2a2418;--accent:#e4c07a;--accent2:#c4a574;--text:#f0e6d2;--line:#4a4030}
+    html[data-mode="light"]{--bg:#e8eef2;--panel:#fff;--text:#1b242c;--muted:#4d5a66;--line:#c5d0d8}
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <strong>Pipeline visualization</strong>
+    <label>Theme
+      <select id="theme">
+        <option value="cosmic">Cosmic Cyber</option>
+        <option value="bento">Bento Grid</option>
+        <option value="swiss">Swiss Architect</option>
+        <option value="aqua">Aqua Web 2.0</option>
+        <option value="brutalist">Pop Brutalist</option>
+        <option value="steel">Steel Tactical</option>
+        <option value="parchment">Parchment</option>
+      </select>
+    </label>
+    <button id="mode" type="button">Dark</button>
+  </div>
+  <main>
+    <h1>How an analysis is calculated</h1>
+    <p class="muted">Decision support, not a blame score. Stronger evidence replaces weaker estimates. Nothing here proves payroll recovery.</p>
+    <section class="card">
+      <h2>Ingest</h2>
+      <div class="flow">
+        <span class="node">Local upload</span>
+        <span>→</span>
+        <span class="node">Public GitHub URL</span>
+        <span>→</span>
+        <span class="node">Private OAuth (server)</span>
+        <span>→</span>
+        <span class="node">Snippet / OCR</span>
+      </div>
+      <p>Files stay in memory. Tokens are never stored. Screenshots are OCR’d in the browser.</p>
+    </section>
+    <section class="card">
+      <h2>Evidence hierarchy (strongest wins)</h2>
+      <div class="tier"><div class="n">1</div><div>Real bundle artifact / source map / metafile → shipped module contribution</div></div>
+      <div class="tier"><div class="n">2</div><div>CI workflow timestamps → observed duration percentiles</div></div>
+      <div class="tier"><div class="n">3</div><div>Resolved lockfile → exact graph, duplicates, vuln input</div></div>
+      <div class="tier"><div class="n">4</div><div>Bundlephobia → advisory single-package min+gzip. Never summed as “your bundle”</div></div>
+      <div class="tier"><div class="n">5</div><div>package.json or import screenshot → declared / candidate directs only</div></div>
+    </section>
+    <section class="card">
+      <h2>Pure models</h2>
+      <p><code>transferTimeMs = compressedBytes / effectiveThroughputBytesPerMs + RTT</code></p>
+      <p><code>annualBlockingHours = runs/week × weeks/year × blockingMinutes/run × affectedDevelopers / 60</code></p>
+      <p><code>potentialTimeValue = annualBlockingHours × hourlyCost</code></p>
+      <p class="muted">Gzip is never labeled uncompressed. Build-wait estimated mode is a clamped hypothesis, not observed latency. Opportunity cost is potential time value under selected assumptions.</p>
+    </section>
+    <section class="card">
+      <h2>Outputs</h2>
+      <div class="flow">
+        <span class="node">Labeled report</span>
+        <span>→</span>
+        <span class="node">PR markdown (top 3)</span>
+        <span>→</span>
+        <span class="node">Warning-first workflow preview</span>
+      </div>
+    </section>
+  </main>
+  <script>
+    const root = document.documentElement;
+    const theme = document.getElementById('theme');
+    const modeBtn = document.getElementById('mode');
+    const stored = JSON.parse(localStorage.getItem('cbt_pipeline_viz') || '{}');
+    if (stored.theme) { root.dataset.theme = stored.theme; theme.value = stored.theme; }
+    if (stored.mode) { root.dataset.mode = stored.mode; modeBtn.textContent = stored.mode === 'dark' ? 'Dark' : 'Light'; }
+    function save(){ localStorage.setItem('cbt_pipeline_viz', JSON.stringify({theme: root.dataset.theme, mode: root.dataset.mode})); }
+    theme.onchange = () => { root.dataset.theme = theme.value; save(); };
+    modeBtn.onclick = () => {
+      root.dataset.mode = root.dataset.mode === 'dark' ? 'light' : 'dark';
+      modeBtn.textContent = root.dataset.mode === 'dark' ? 'Dark' : 'Light';
+      save();
+    };
+  </script>
+</body>
+</html>

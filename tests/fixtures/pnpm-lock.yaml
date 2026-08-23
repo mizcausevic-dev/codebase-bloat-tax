@@ -1,0 +1,29 @@
+lockfileVersion: '9.0'
+
+importers:
+  .:
+    dependencies:
+      zod:
+        specifier: 3.23.8
+        version: 3.23.8
+    optionalDependencies:
+      fsevents:
+        specifier: 2.3.3
+        version: 2.3.3
+    peerDependencies:
+      react:
+        specifier: '>=18'
+        version: 18.3.1
+
+packages:
+  /fsevents@2.3.3:
+    resolution: {integrity: sha512-fsevents}
+    optional: true
+
+  /react@18.3.1:
+    resolution: {integrity: sha512-react}
+
+  /zod@3.23.8:
+    resolution: {integrity: sha512-zod}
+    dependencies:
+      leftover: 0.0.1

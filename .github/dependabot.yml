@@ -5,6 +5,10 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    # Demo fixtures are invented parser samples, not this app's install tree.
+    exclude-paths:
+      - fixtures/**
+      - public/fixtures/**
   - package-ecosystem: github-actions
     directory: /
     schedule:

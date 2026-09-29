@@ -4,6 +4,7 @@ import { assessMobileCost } from '../src/models/mobileCost';
 import { assessBuildWait } from '../src/models/buildWait';
 import { assessOpportunityCost } from '../src/models/opportunityCost';
 import { proposeAlternatives } from '../src/models/alternatives';
+import { shouldRevealModeledTimeValue } from '../src/models/timeValueReveal';
 import { DEFAULT_HOURLY_COST_USD, WEEKS_PER_YEAR } from '../src/models/constants';
 
 describe('bundleImpact', () => {
@@ -104,6 +105,13 @@ describe('opportunityCost', () => {
     expect(result.inputsUsed.hourlyCost).toBe(DEFAULT_HOURLY_COST_USD);
     expect(result.inputsUsed.defaultsWereUsed).toBe(true);
     expect(result.confidence).toBe('low');
+  });
+});
+
+describe('timeValueReveal', () => {
+  it('hides modeled dollars until the operator opts in', () => {
+    expect(shouldRevealModeledTimeValue(false)).toBe(false);
+    expect(shouldRevealModeledTimeValue(true)).toBe(true);
   });
 });
 

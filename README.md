@@ -16,7 +16,7 @@ This tool estimates dependency and delivery costs. It does not prove causality, 
 | Engage | Upload, public GitHub URL, snippet/OCR, or Load demo. |
 | Convert | Export PR-safe markdown or preview a warning-first GitHub Action (not auto-committed). |
 | Money | Potential time value under operator assumptions. This preview is not a paid product. |
-| Launch | Public Pages preview. Private OAuth is a documented server path only. |
+| Launch | Public GitHub repo and GitHub Pages preview. Private OAuth is a documented server path only. |
 | Improve after launch | Attach measured artifacts so recommendations can move from measure-first to remove/replace. |
 
 **Business goal:** help teams decide what to measure or remove next.  
@@ -92,7 +92,7 @@ Lookups are cached in memory, timed out, and rate-limit aware. Malformed payload
 - Opportunity cost is potential time value, not recovered payroll  
 - Snippet/OCR inventories cannot resolve versions or transitive graphs  
 - npm audit-style coverage does not include peer dependencies  
-- GitHub Action SHAs in generated YAML need a human lookup before production use  
+- GitHub Action SHAs in the **generated** YAML still need a human lookup before production use. This repo's own Pages workflow is SHA-pinned.  
 - Private OAuth requires you to register a GitHub OAuth app and host the Netlify function  
 
 ## Local
@@ -103,19 +103,24 @@ npm test
 npm run dev
 ```
 
-Load demo uses `fixtures/demo/` (also copied to `public/fixtures/demo/`).
-
-## Live preview
-
-GitHub Pages (public upload, public GitHub URL, snippet/screenshot). Private OAuth stays disabled.
-
-## Screenshots
-
-- `docs/screenshots/home-ingest-Cursor.png`  
-- `docs/screenshots/demo-dashboard-Cursor.png`  
-- `docs/screenshots/low-overwhelm-Cursor.png`  
-- `docs/screenshots/theme-switcher-Cursor.png`  
+Load demo uses `public/fixtures/demo/` (parser fixture, not an installable lockfile).
 
 ## License
 
-Source in this repository is provided for Kinetic Gain LLC / mizcausevic-dev use and public preview. Demo lockfiles are invented samples, not copies of private company lockfiles.
+Apache-2.0. See [LICENSE](LICENSE).
+
+## Security
+
+See [SECURITY.md](SECURITY.md). Report vulnerabilities via GitHub private advisories. This preview makes **no production security-posture claim**.
+
+## Live preview
+
+GitHub Pages: https://mizcausevic-dev.github.io/codebase-bloat-tax/
+
+Public upload, public GitHub URL, snippet/screenshot. Private OAuth stays disabled on Pages. Potential time value stays hidden until you opt in under Assumptions. Production source maps are not emitted.
+
+## Screenshots
+
+- `docs/screenshots/home-ingest-Cursor.png`
+
+Load demo uses `public/fixtures/demo/` (`package.json` + `npm-lock.demo.json`). The demo lockfile is a parser fixture with placeholder integrity. It is not named `package-lock.json`, so Dependabot does not treat it as this app's tree. Do not run `npm install` in that folder.

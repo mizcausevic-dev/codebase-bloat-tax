@@ -7,12 +7,15 @@ type Props = {
   estimate: Estimate;
   extra?: ReactNode;
   lowOverwhelm?: boolean;
+  hideValue?: boolean;
+  hiddenMessage?: string;
 };
 
-export function EstimateCard({ title, estimate, extra, lowOverwhelm }: Props) {
+export function EstimateCard({ title, estimate, extra, lowOverwhelm, hideValue, hiddenMessage }: Props) {
   const [open, setOpen] = useState(false);
-  const value =
-    estimate.value === null
+  const value = hideValue
+    ? hiddenMessage ?? 'Hidden until you opt in under Assumptions.'
+    : estimate.value === null
       ? 'Unmeasured'
       : `${Intl.NumberFormat(undefined, { maximumFractionDigits: 1 }).format(estimate.value)} ${estimate.unit}`;
 
@@ -28,7 +31,7 @@ export function EstimateCard({ title, estimate, extra, lowOverwhelm }: Props) {
         <span className={`badge ${estimate.confidence}`}>{estimate.confidence}</span>
       </div>
       <p style={{ fontSize: '1.35rem', margin: '10px 0 6px' }}>{value}</p>
-      {estimate.range ? (
+      {!hideValue && estimate.range ? (
         <p className="muted mono">
           Range {estimate.range.min.toFixed(1)} – {estimate.range.max.toFixed(1)} {estimate.unit}
         </p>

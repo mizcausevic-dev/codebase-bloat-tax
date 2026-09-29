@@ -14,7 +14,9 @@ export type IngestedFile = {
 export function classifyFilename(name: string): FileRole {
   const base = name.replace(/\\/g, '/').split('/').pop()?.toLowerCase() ?? '';
   if (base === 'package.json') return 'package-json';
-  if (base === 'package-lock.json' || base === 'npm-shrinkwrap.json') return 'npm-lock';
+  if (base === 'package-lock.json' || base === 'npm-shrinkwrap.json' || base === 'npm-lock.demo.json') {
+    return 'npm-lock';
+  }
   if (base === 'pnpm-lock.yaml') return 'pnpm-lock';
   if (base === 'yarn.lock') return 'yarn-lock';
   if (base === 'stats.json' || base.endsWith('.stats.json')) return 'bundler-stats';

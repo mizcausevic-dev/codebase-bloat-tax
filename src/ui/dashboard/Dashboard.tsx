@@ -1,4 +1,5 @@
 import type { CodebaseBloatReport } from '../../schemas/report';
+import { shouldRevealModeledTimeValue } from '../../models/timeValueReveal';
 import { EstimateCard } from '../cards/EstimateCard';
 import { DependencyGraph } from '../graph/DependencyGraph';
 import { RecommendationQueue } from '../recommendations/RecommendationQueue';
@@ -14,6 +15,7 @@ type Props = {
 };
 
 export function Dashboard({ report, lowOverwhelm, config, onConfig, onExport, onWorkflow }: Props) {
+  const revealTimeValue = shouldRevealModeledTimeValue(config.showModeledTimeValue);
   return (
     <div className="grid full">
       <section className="glass card">
@@ -75,12 +77,20 @@ export function Dashboard({ report, lowOverwhelm, config, onConfig, onExport, on
           title="Potential time value"
           estimate={report.opportunityCost}
           lowOverwhelm={lowOverwhelm}
+          hideValue={!revealTimeValue}
+          hiddenMessage="Hidden. This is a labeled model, not recovered payroll. Enable it under Assumptions."
           extra={
-            <p className="muted">
-              {report.opportunityCost.annualBlockingHours.value?.toFixed(1)} hours / year under selected assumptions.
-              Not guaranteed salary burn.
-              {report.opportunityCost.inputsUsed.defaultsWereUsed ? ' Labeled defaults were used.' : ''}
-            </p>
+            revealTimeValue ? (
+              <p className="muted">
+                {report.opportunityCost.annualBlockingHours.value?.toFixed(1)} hours / year under selected assumptions.
+                Not guaranteed salary burn.
+                {report.opportunityCost.inputsUsed.defaultsWereUsed ? ' Labeled defaults were used.' : ''}
+              </p>
+            ) : (
+              <p className="muted">
+                Dollar and hour figures stay off until you opt in. Defaults would otherwise look like a payroll fact.
+              </p>
+            )
           }
         />
       </div>

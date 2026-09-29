@@ -36,6 +36,9 @@ export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, busy, error }:
 
   return (
     <div className={lowOverwhelm ? 'grid full' : 'ingest-grid'}>
+      <p className="notice">
+        Public decision-support preview. Uploads stay in this browser. This host is not a production security product.
+      </p>
       <motion.section className="glass card" initial={lowOverwhelm ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
         <h2>Local manifests</h2>
         <p className="muted">

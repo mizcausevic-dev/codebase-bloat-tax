@@ -77,11 +77,18 @@ export function App() {
   };
 
   const loadDemo = async () => {
-    const pkg = await fetch(`${import.meta.env.BASE_URL}fixtures/demo/package.json`).then((r) => r.text());
-    const lock = await fetch(`${import.meta.env.BASE_URL}fixtures/demo/package-lock.json`).then((r) => r.text());
+    const base = import.meta.env.BASE_URL;
+    const pkgRes = await fetch(`${base}fixtures/demo/package.json`);
+    const lockRes = await fetch(`${base}fixtures/demo/npm-lock.demo.json`);
+    if (!pkgRes.ok || !lockRes.ok) {
+      setError('Demo fixtures are missing from this host. Check public/fixtures/demo/.');
+      return;
+    }
+    const pkg = await pkgRes.text();
+    const lock = await lockRes.text();
     await analyze({
       sourceKind: 'demo',
-      files: [ingestTextFile('package.json', pkg), ingestTextFile('package-lock.json', lock)],
+      files: [ingestTextFile('package.json', pkg), ingestTextFile('npm-lock.demo.json', lock)],
     });
   };
 

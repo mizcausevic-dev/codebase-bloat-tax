@@ -19,9 +19,10 @@ export async function ocrImportScreenshot(file: File): Promise<OcrCandidate> {
     throw new ValidationError('Screenshot must be an image file.');
   }
   const { createWorker } = await import('tesseract.js');
+  // Pin CDN URLs to lockfile versions. Dist-tags (@6) would float under a public CDN.
   const worker = await createWorker('eng', 1, {
-    workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@6/dist/worker.min.js',
-    corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@6/tesseract-core.wasm.js',
+    workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/worker.min.js',
+    corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@6.1.2/tesseract-core.wasm.js',
     langPath: 'https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng/4.0.0_best_int',
   });
   try {

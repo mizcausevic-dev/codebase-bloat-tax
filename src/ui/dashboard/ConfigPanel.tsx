@@ -15,6 +15,7 @@ export type OperatorConfig = {
   opportunity: OpportunityCostInput;
   enableLookups: boolean;
   persistHistory: boolean;
+  showModeledTimeValue: boolean;
 };
 
 export const DEFAULT_CONFIG: OperatorConfig = {
@@ -27,6 +28,7 @@ export const DEFAULT_CONFIG: OperatorConfig = {
   },
   enableLookups: false,
   persistHistory: false,
+  showModeledTimeValue: false,
 };
 
 type Props = {
@@ -118,6 +120,14 @@ export function ConfigPanel({ config, onChange }: Props) {
         </label>
       </div>
       <label style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+        <input
+          type="checkbox"
+          checked={config.showModeledTimeValue}
+          onChange={(e) => patch({ showModeledTimeValue: e.target.checked })}
+        />
+        Show modeled potential time value (uses your cost assumptions; not recovered payroll)
+      </label>
+      <label style={{ display: 'flex', gap: 8, marginTop: 8 }}>
         <input
           type="checkbox"
           checked={config.enableLookups}

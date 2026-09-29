@@ -28,7 +28,7 @@ describe('npm lockfile parser', () => {
   });
 
   it('flags optional and peer entries', () => {
-    const demo = readFileSync(join(dir, '../fixtures/demo/package-lock.json'), 'utf8');
+    const demo = readFileSync(join(dir, '../fixtures/demo/npm-lock.demo.json'), 'utf8');
     const parsed = resolveNpmLockfile(demo);
     expect(parsed.nodes.some((n) => n.name === 'fsevents' && n.dependencyType === 'optional')).toBe(true);
     expect(parsed.nodes.some((n) => n.name === 'react-dom' && n.dependencyType === 'peer')).toBe(true);

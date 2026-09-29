@@ -7,6 +7,7 @@ import {
   parseJsonSafe,
   ValidationError,
 } from '../src/ingestion/validate';
+import { classifyFilename } from '../src/ingestion/manifests';
 import { DISCLAIMER, TOOL_SOURCE_VERSION } from '../src/models/constants';
 
 const estimate = {
@@ -170,5 +171,7 @@ describe('URL and file validation', () => {
     expect(() => assertAllowedFilename('../../etc/passwd')).toThrow(ValidationError);
     expect(() => assertAllowedFilename('malware.exe')).toThrow(ValidationError);
     expect(() => parseJsonSafe('{"__proto__":{"admin":true}}')).toThrow(/forbidden key/);
+    expect(() => assertAllowedFilename('npm-lock.demo.json')).not.toThrow();
+    expect(classifyFilename('npm-lock.demo.json')).toBe('npm-lock');
   });
 });

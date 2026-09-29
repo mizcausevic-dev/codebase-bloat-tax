@@ -36,7 +36,8 @@ export function AboutModal({ onClose }: Props) {
             <strong>Convert.</strong> Export a PR-safe note or generate a warning-first workflow (not auto-committed).
           </li>
           <li>
-            <strong>Money.</strong> Time-value is potential under assumptions. This preview is not a paid product.
+            <strong>Money.</strong> Time-value is potential under assumptions and stays hidden until you opt in. This
+            preview is not a paid product.
           </li>
           <li>
             <strong>Launch.</strong> GitHub Pages public preview. Private OAuth stays a documented server path.

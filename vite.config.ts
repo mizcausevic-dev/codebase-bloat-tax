@@ -8,6 +8,9 @@ const base = pages ? '/codebase-bloat-tax/' : '/';
 export default defineConfig({
   plugins: [react()],
   base,
+  build: {
+    sourcemap: false,
+  },
   test: {
     environment: 'node',
     include: ['src/**/*.test.ts', 'tests/**/*.test.ts'],

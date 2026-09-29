@@ -10,6 +10,7 @@ const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 const ALLOWED_NAMES = new Set([
   'package.json',
   'package-lock.json',
+  'npm-lock.demo.json',
   'npm-shrinkwrap.json',
   'pnpm-lock.yaml',
   'yarn.lock',

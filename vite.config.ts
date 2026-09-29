@@ -10,6 +10,31 @@ export default defineConfig({
   base,
   build: {
     sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          const norm = id.replace(/\\/g, '/');
+          if (!norm.includes('/node_modules/')) return;
+          if (
+            norm.includes('/node_modules/react/') ||
+            norm.includes('/node_modules/react-dom/') ||
+            norm.includes('/node_modules/scheduler/')
+          ) {
+            return 'react';
+          }
+          if (norm.includes('/node_modules/zod/')) return 'zod';
+          if (norm.includes('/node_modules/yaml/')) return 'yaml';
+          if (
+            norm.includes('/node_modules/framer-motion/') ||
+            norm.includes('/node_modules/motion-dom/') ||
+            norm.includes('/node_modules/motion-utils/')
+          ) {
+            return 'motion';
+          }
+          if (norm.includes('/node_modules/tesseract.js')) return 'ocr';
+        },
+      },
+    },
   },
   test: {
     environment: 'node',

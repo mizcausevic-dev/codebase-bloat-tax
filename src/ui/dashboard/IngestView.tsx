@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { ingestTextFile, parseImportSnippet, type IngestedFile } from '../../ingestion/manifests';
 import { fetchPublicGithubManifests } from '../../ingestion/github';
 import { ocrImportScreenshot } from '../../ingestion/screenshots';
@@ -39,7 +38,7 @@ export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, busy, error }:
       <p className="notice">
         Public decision-support preview. Uploads stay in this browser. This host is not a production security product.
       </p>
-      <motion.section className="glass card" initial={lowOverwhelm ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+      <section className="glass card">
         <h2>Local manifests</h2>
         <p className="muted">
           Drag package.json, lockfiles, and optional bundler stats. Files stay in memory. Nothing is uploaded to this
@@ -73,9 +72,9 @@ export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, busy, error }:
             Load demo
           </button>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section className="glass card" initial={lowOverwhelm ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+      <section className="glass card">
         <h2>Public GitHub URL</h2>
         <p className="muted">
           Unauthenticated GitHub Contents API. Public repositories only. Host must be github.com.
@@ -108,9 +107,9 @@ export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, busy, error }:
             Fetch public manifests
           </button>
         </form>
-      </motion.section>
+      </section>
 
-      <motion.section className="glass card" initial={lowOverwhelm ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+      <section className="glass card">
         <h2>Private GitHub repo</h2>
         <p className="muted">
           Contents: read only. No broad repo scope. Workflow writes would require a later, explicit confirmation and
@@ -139,9 +138,9 @@ export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, busy, error }:
             Start private Contents: read
           </button>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section className="glass card" initial={lowOverwhelm ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+      <section className="glass card">
         <h2>Import snippet or screenshot</h2>
         <p className="muted">
           Candidate inventory only. Cannot resolve versions, transitive deps, installed size, or shipped bundle cost.
@@ -195,7 +194,7 @@ export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, busy, error }:
             />
           </label>
         </div>
-      </motion.section>
+      </section>
       {error ? <p className="error">{error}</p> : null}
     </div>
   );

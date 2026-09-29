@@ -1,6 +1,6 @@
-import { parse as parseYaml } from 'yaml';
-import { MAX_GRAPH_NODES, MAX_YAML_ALIAS_COUNT } from '../models/constants';
-import { ValidationError, walkForbidProto } from '../ingestion/validate';
+import { MAX_GRAPH_NODES } from '../models/constants';
+import { ValidationError } from '../ingestion/validate';
+import { parseYamlSafe } from './parseYamlSafe';
 import type { DeclaredDependency, GraphEdge, GraphNode } from './types';
 
 export type PnpmLockParse = {
@@ -35,19 +35,8 @@ function parseSnapshotKey(key: string): { name: string; version: string } | null
  * Official-format pnpm lock parser (importers, packages, snapshots).
  * yaml merge keys disabled; alias cap set. Does not execute package code.
  */
-export function resolvePnpmLockfile(text: string, declared: DeclaredDependency[] = []): PnpmLockParse {
-  let raw: unknown;
-  try {
-    raw = parseYaml(text, {
-      merge: false,
-      maxAliasCount: MAX_YAML_ALIAS_COUNT,
-      uniqueKeys: true,
-      prettyErrors: true,
-    });
-  } catch {
-    throw new ValidationError('pnpm-lock.yaml is not valid YAML or exceeded alias/merge guards.');
-  }
-  walkForbidProto(raw, 'pnpm-lock.yaml');
+export async function resolvePnpmLockfile(text: string, declared: DeclaredDependency[] = []): Promise<PnpmLockParse> {
+  const raw = await parseYamlSafe(text, 'pnpm-lock.yaml', true);
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
     throw new ValidationError('pnpm-lock.yaml root must be a mapping.');
   }

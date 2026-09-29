@@ -1,6 +1,6 @@
-import { parse as parseYaml } from 'yaml';
-import { MAX_GRAPH_NODES, MAX_YAML_ALIAS_COUNT } from '../models/constants';
-import { ValidationError, walkForbidProto } from '../ingestion/validate';
+import { MAX_GRAPH_NODES } from '../models/constants';
+import { ValidationError } from '../ingestion/validate';
+import { parseYamlSafe } from './parseYamlSafe';
 import type { DeclaredDependency, GraphEdge, GraphNode } from './types';
 
 export type YarnLockParse = {
@@ -27,22 +27,11 @@ function parseClassicLocator(header: string): { name: string } | null {
  * Detect Yarn classic (v1) vs Berry (v2+) and parse without executing package code.
  * Classic is a custom text format. Berry is YAML with __metadata.
  */
-export function resolveYarnLockfile(text: string, declared: DeclaredDependency[] = []): YarnLockParse {
+export async function resolveYarnLockfile(text: string, declared: DeclaredDependency[] = []): Promise<YarnLockParse> {
   const isBerry = /^__metadata:/m.test(text) || /yarn lockfile v2/i.test(text) || /\blanguageName:/m.test(text);
 
   if (isBerry) {
-    let raw: unknown;
-    try {
-      raw = parseYaml(text, {
-        merge: false,
-        maxAliasCount: MAX_YAML_ALIAS_COUNT,
-        uniqueKeys: false,
-        prettyErrors: true,
-      });
-    } catch {
-      throw new ValidationError('yarn.lock (Berry) is not valid YAML or exceeded alias/merge guards.');
-    }
-    walkForbidProto(raw, 'yarn.lock');
+    const raw = await parseYamlSafe(text, 'yarn.lock (Berry)', false);
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
       throw new ValidationError('yarn.lock (Berry) root must be a mapping.');
     }

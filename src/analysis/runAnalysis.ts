@@ -45,7 +45,7 @@ function strongestTier(input: {
 
 export async function runAnalysis(req: AnalysisRequest): Promise<CodebaseBloatReport> {
   const manifests = collectManifests(req.files);
-  const graph = normalizeGraph({
+  const graph = await normalizeGraph({
     packageJson: manifests.packageJson,
     npmLock: manifests.npmLock,
     pnpmLock: manifests.pnpmLock,

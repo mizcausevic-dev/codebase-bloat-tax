@@ -18,11 +18,11 @@ describe('npm lockfile parser', () => {
     expect(parsed.edges.some((e) => e.from === 'once@1.4.0' && e.to === 'wrappy@1.0.2')).toBe(true);
   });
 
-  it('walks workspaces and duplicate versions in lockfileVersion 3', () => {
+  it('walks workspaces and duplicate versions in lockfileVersion 3', async () => {
     const parsed = resolveNpmLockfile(load('npm-workspaces.lock.json'));
     const pads = parsed.nodes.filter((n) => n.name === 'left-pad');
     expect(new Set(pads.map((p) => p.version)).size).toBe(2);
-    const graph = normalizeGraph({ npmLock: load('npm-workspaces.lock.json') });
+    const graph = await normalizeGraph({ npmLock: load('npm-workspaces.lock.json') });
     expect(graph.duplicateGroups.some((g) => g.name === 'left-pad')).toBe(true);
     expect(graph.installedInstances).toBeGreaterThanOrEqual(graph.uniquePackages);
   });
@@ -41,8 +41,8 @@ describe('npm lockfile parser', () => {
 });
 
 describe('pnpm lockfile parser', () => {
-  it('reads importers, packages, optional and peer fields', () => {
-    const parsed = resolvePnpmLockfile(load('pnpm-lock.yaml'), [
+  it('reads importers, packages, optional and peer fields', async () => {
+    const parsed = await resolvePnpmLockfile(load('pnpm-lock.yaml'), [
       { name: 'zod', range: '3.23.8', dependencyType: 'prod' },
     ]);
     expect(parsed.nodes.some((n) => n.name === 'zod')).toBe(true);
@@ -50,31 +50,31 @@ describe('pnpm lockfile parser', () => {
     expect(parsed.edges.some((e) => e.kind === 'peer' || e.from.startsWith('importer:'))).toBe(true);
   });
 
-  it('rejects YAML without packages/snapshots', () => {
-    expect(() => resolvePnpmLockfile('lockfileVersion: "9.0"\nfoo: 1\n')).toThrow(/packages or snapshots/);
+  it('rejects YAML without packages/snapshots', async () => {
+    await expect(resolvePnpmLockfile('lockfileVersion: "9.0"\nfoo: 1\n')).rejects.toThrow(/packages or snapshots/);
   });
 });
 
 describe('yarn lockfile parser', () => {
-  it('parses classic v1', () => {
-    const parsed = resolveYarnLockfile(load('yarn-classic.lock'), [
+  it('parses classic v1', async () => {
+    const parsed = await resolveYarnLockfile(load('yarn-classic.lock'), [
       { name: 'lodash', range: '^4.17.21', dependencyType: 'prod' },
     ]);
     expect(parsed.kind).toBe('yarn-classic');
     expect(parsed.nodes.some((n) => n.name === 'lodash' && n.version === '4.17.21')).toBe(true);
   });
 
-  it('parses berry', () => {
-    const parsed = resolveYarnLockfile(load('yarn-berry.lock'));
+  it('parses berry', async () => {
+    const parsed = await resolveYarnLockfile(load('yarn-berry.lock'));
     expect(parsed.kind).toBe('yarn-berry');
     expect(parsed.nodes.some((n) => n.name === 'react')).toBe(true);
   });
 });
 
 describe('absent lockfile', () => {
-  it('keeps declared directs only and marks missingLockfile', () => {
+  it('keeps declared directs only and marks missingLockfile', async () => {
     const pkg = { dependencies: { zod: '3.23.8' }, peerDependencies: { react: '>=18' } };
-    const graph = normalizeGraph({ packageJson: pkg });
+    const graph = await normalizeGraph({ packageJson: pkg });
     expect(graph.missingLockfile).toBe(true);
     expect(graph.uniquePackages).toBe(2);
     expect(graph.nodes.every((n) => n.version === 'unresolved')).toBe(true);

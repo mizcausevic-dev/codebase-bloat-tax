@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Header } from './ui/header/Header';
 import { IngestView } from './ui/dashboard/IngestView';
-import { Dashboard } from './ui/dashboard/Dashboard';
 import { AboutModal } from './ui/dashboard/AboutModal';
 import { applyTheme, loadPrefs, persistPrefs, type ColorMode, type ThemeId } from './ui/themes/themes';
 import { DEFAULT_CONFIG, type OperatorConfig } from './ui/dashboard/ConfigPanel';
@@ -12,6 +11,10 @@ import { ingestTextFile } from './ingestion/manifests';
 import { exportMarkdown } from './export/markdown';
 import { generateGithubAction } from './export/githubAction';
 import { ValidationError } from './ingestion/validate';
+
+const Dashboard = lazy(() =>
+  import('./ui/dashboard/Dashboard').then((m) => ({ default: m.Dashboard })),
+);
 
 const HISTORY_KEY = 'cbt_last_report_meta';
 
@@ -109,25 +112,27 @@ export function App() {
           />
           {busy ? <p className="muted">Working. Uploaded bytes stay in memory.</p> : null}
           {report ? (
-            <Dashboard
-              report={report}
-              lowOverwhelm={lowOverwhelm}
-              config={config}
-              onConfig={setConfig}
-              onExport={() => {
-                const md = exportMarkdown(report);
-                setMarkdown(md);
-                // window.dataLayer?.push({ event: 'content_engagement_click', cta_target: 'markdown-export' })
-              }}
-              onWorkflow={() => {
-                const wf = generateGithubAction({
-                  packageManager: report.graph.manager === 'pnpm' ? 'pnpm' : report.graph.manager.startsWith('yarn') ? 'yarn' : 'npm',
-                  blockingOptIn: false,
-                });
-                setWorkflow(`${wf.path}\n\n${wf.shaPinNote}\n\n${wf.contents}`);
-                // window.dataLayer?.push({ event: 'self_serve_cta_click', cta_target: 'workflow-preview' })
-              }}
-            />
+            <Suspense fallback={<p className="muted">Loading dashboard.</p>}>
+              <Dashboard
+                report={report}
+                lowOverwhelm={lowOverwhelm}
+                config={config}
+                onConfig={setConfig}
+                onExport={() => {
+                  const md = exportMarkdown(report);
+                  setMarkdown(md);
+                  // window.dataLayer?.push({ event: 'content_engagement_click', cta_target: 'markdown-export' })
+                }}
+                onWorkflow={() => {
+                  const wf = generateGithubAction({
+                    packageManager: report.graph.manager === 'pnpm' ? 'pnpm' : report.graph.manager.startsWith('yarn') ? 'yarn' : 'npm',
+                    blockingOptIn: false,
+                  });
+                  setWorkflow(`${wf.path}\n\n${wf.shaPinNote}\n\n${wf.contents}`);
+                  // window.dataLayer?.push({ event: 'self_serve_cta_click', cta_target: 'workflow-preview' })
+                }}
+              />
+            </Suspense>
           ) : (
             <IngestView
               lowOverwhelm={lowOverwhelm}

@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { DISCLAIMER } from '../../models/constants';
 
 type Props = { onClose: () => void };
@@ -6,7 +5,7 @@ type Props = { onClose: () => void };
 export function AboutModal({ onClose }: Props) {
   return (
     <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="about-title">
-      <motion.div className="glass modal" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}>
+      <div className="glass modal">
         <h2 id="about-title">About this tool</h2>
         <p>{DISCLAIMER}</p>
         <ol>
@@ -55,7 +54,7 @@ export function AboutModal({ onClose }: Props) {
         <button type="button" className="btn primary" onClick={onClose}>
           Close
         </button>
-      </motion.div>
+      </div>
     </div>
   );
 }

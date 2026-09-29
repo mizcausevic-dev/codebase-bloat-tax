@@ -26,12 +26,12 @@ export function declaredFromPackageJson(pkg: unknown): DeclaredDependency[] {
   return out;
 }
 
-export function normalizeGraph(input: {
+export async function normalizeGraph(input: {
   packageJson?: unknown;
   npmLock?: string;
   pnpmLock?: string;
   yarnLock?: string;
-}): NormalizedGraph {
+}): Promise<NormalizedGraph> {
   const declared = declaredFromPackageJson(input.packageJson);
 
   if (input.npmLock) {
@@ -39,11 +39,11 @@ export function normalizeGraph(input: {
     return finish('npm', parsed.lockfileVersion, parsed.nodes, parsed.edges, declared, false);
   }
   if (input.pnpmLock) {
-    const parsed = resolvePnpmLockfile(input.pnpmLock, declared);
+    const parsed = await resolvePnpmLockfile(input.pnpmLock, declared);
     return finish('pnpm', parsed.lockfileVersion, parsed.nodes, parsed.edges, declared, false);
   }
   if (input.yarnLock) {
-    const parsed = resolveYarnLockfile(input.yarnLock, declared);
+    const parsed = await resolveYarnLockfile(input.yarnLock, declared);
     return finish(parsed.kind, parsed.lockfileVersion, parsed.nodes, parsed.edges, declared, false);
   }
 

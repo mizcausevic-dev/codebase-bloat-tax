@@ -41,9 +41,9 @@ Estate rules mention both `-Claude` and `-Cursor` suffixes. This repo follows th
 | react / react-dom | UI |
 | vite / typescript / vitest | build and tests |
 | zod | required report contracts; reject malformed third-party data |
-| yaml | pnpm / Yarn Berry lockfiles, with `merge: false` and alias caps |
-| framer-motion | estate dashboard motion on cards/modals (React dashboard, not Motion-core-only lane) |
-| tesseract.js | in-browser OCR so screenshots are never uploaded |
+| yaml | pnpm / Yarn Berry lockfiles, with `merge: false` and alias caps. Dynamic import, so npm/Yarn-classic ingest does not download it. |
+| framer-motion | dashboard cards/queue only. Ingest first paint does not import it. |
+| tesseract.js | in-browser OCR so screenshots are never uploaded. Dynamic import on screenshot pick. |
 
 No lockfile parser executes package code. `npm install` is never run against an uploaded tree.
 
@@ -105,9 +105,12 @@ Lookups are cached in memory, timed out, and rate-limit aware. Malformed payload
 
 ```bash
 npm install
+npm run typecheck
 npm test
 npm run dev
 ```
+
+Pull requests run `.github/workflows/ci.yml` (`npm ci`, typecheck, test, production build). Push to `main` still publishes via `.github/workflows/pages.yml`.
 
 Load demo uses `public/fixtures/demo/` (parser fixture, not an installable lockfile).
 

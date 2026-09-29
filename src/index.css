@@ -171,6 +171,11 @@ textarea:focus-visible {
   gap: 16px;
 }
 
+.ingest-grid > .notice,
+.ingest-grid > .error {
+  grid-column: 1 / -1;
+}
+
 .drop {
   border: 1px dashed var(--line);
   border-radius: var(--radius);

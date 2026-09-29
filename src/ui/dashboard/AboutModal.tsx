@@ -8,49 +8,23 @@ export function AboutModal({ onClose }: Props) {
       <div className="glass modal">
         <h2 id="about-title">About this tool</h2>
         <p>{DISCLAIMER}</p>
-        <ol>
-          <li>
-            <strong>What.</strong> A decision-support diagnostic for JS dependency inventory, bundle-risk signals, and
-            labeled delivery-cost estimates.
-          </li>
-          <li>
-            <strong>Who.</strong> Staff+ web engineers, staff+ platform, and tech leads who need to decide what to
-            measure or remove next.
-          </li>
-          <li>
-            <strong>Why it wins.</strong> It refuses to treat package count as shipped JavaScript, and it shows the
-            calculation on every card.
-          </li>
-          <li>
-            <strong>Structure.</strong> Ingest → normalize graph → optional public lookups → pure models → labeled
-            report.
-          </li>
-          <li>
-            <strong>Discover.</strong> Public GitHub repo, README, and the pipeline visualization.
-          </li>
-          <li>
-            <strong>Engage.</strong> Upload, public URL, snippet/OCR, or Load demo.
-          </li>
-          <li>
-            <strong>Convert.</strong> Export a PR-safe note or generate a warning-first workflow (not auto-committed).
-          </li>
-          <li>
-            <strong>Money.</strong> Time-value is potential under assumptions and stays hidden until you opt in. This
-            preview is not a paid product.
-          </li>
-          <li>
-            <strong>Launch.</strong> GitHub Pages public preview. Private OAuth stays a documented server path.
-          </li>
-          <li>
-            <strong>Improve.</strong> Add measured artifacts, then tighten recommendations from measure-first to remove
-            or replace.
-          </li>
-        </ol>
-        <p className="muted">
-          KPIs: analyses completed → <span className="mono">tool_complete</span>. Recommendation exports →{' '}
-          <span className="mono">content_engagement_click</span>. Workflow generated →{' '}
-          <span className="mono">self_serve_cta_click</span>.
+        <p>
+          <strong>What.</strong> A local-first decision-support diagnostic. It turns manifests, lockfiles, optional
+          bundler or CI artifacts, and import snippets into a labeled inventory and cost report.
         </p>
+        <p>
+          <strong>What it is not.</strong> Not a paid product. Not a production security product. Not recovered payroll.
+          Package count is not shipped JavaScript. Time-value stays hidden until you opt in under Assumptions.
+        </p>
+        <p>
+          <strong>Evidence.</strong> Strongest available of: production bundle / source map / metafile, CI timestamps,
+          resolved lockfile, Bundlephobia advisory (never summed as your bundle), then package.json or import screenshot.
+        </p>
+        <p>
+          <strong>Who.</strong> Staff+ web and platform engineers, and tech leads, deciding what to measure or remove
+          next.
+        </p>
+        <p className="muted">This preview makes no production security-posture claim.</p>
         <button type="button" className="btn primary" onClick={onClose}>
           Close
         </button>

@@ -8,6 +8,7 @@ import { runAnalysis } from './analysis/runAnalysis';
 import type { CodebaseBloatReport } from './schemas/report';
 import type { IngestedFile } from './ingestion/manifests';
 import { ingestTextFile } from './ingestion/manifests';
+import { fetchPublicGithubManifests } from './ingestion/github';
 import { exportMarkdown } from './export/markdown';
 import { generateGithubAction } from './export/githubAction';
 import { ValidationError } from './ingestion/validate';
@@ -80,19 +81,41 @@ export function App() {
   };
 
   const loadDemo = async () => {
-    const base = import.meta.env.BASE_URL;
-    const pkgRes = await fetch(`${base}fixtures/demo/package.json`);
-    const lockRes = await fetch(`${base}fixtures/demo/npm-lock.demo.json`);
-    if (!pkgRes.ok || !lockRes.ok) {
-      setError('Demo fixtures are missing from this host. Check public/fixtures/demo/.');
-      return;
+    setBusy(true);
+    setError(null);
+    try {
+      const base = import.meta.env.BASE_URL;
+      const pkgRes = await fetch(`${base}fixtures/demo/package.json`);
+      const lockRes = await fetch(`${base}fixtures/demo/npm-lock.demo.json`);
+      if (!pkgRes.ok || !lockRes.ok) {
+        throw new Error('Demo fixtures are missing from this host. Check public/fixtures/demo/.');
+      }
+      const pkg = await pkgRes.text();
+      const lock = await lockRes.text();
+      await analyze({
+        sourceKind: 'demo',
+        files: [ingestTextFile('package.json', pkg), ingestTextFile('npm-lock.demo.json', lock)],
+      });
+    } catch (err) {
+      setError(err instanceof ValidationError || err instanceof Error ? err.message : 'Demo load failed.');
+      setBusy(false);
     }
-    const pkg = await pkgRes.text();
-    const lock = await lockRes.text();
-    await analyze({
-      sourceKind: 'demo',
-      files: [ingestTextFile('package.json', pkg), ingestTextFile('npm-lock.demo.json', lock)],
-    });
+  };
+
+  const fetchGithub = async (repoUrl: string) => {
+    setBusy(true);
+    setError(null);
+    try {
+      const { owner, repo, ref, files } = await fetchPublicGithubManifests(repoUrl);
+      await analyze({
+        sourceKind: 'github-public',
+        files,
+        repository: { owner, name: repo, ref, public: true },
+      });
+    } catch (err) {
+      setError(err instanceof ValidationError || err instanceof Error ? err.message : 'GitHub fetch failed.');
+      setBusy(false);
+    }
   };
 
   return (
@@ -140,6 +163,7 @@ export function App() {
               error={error}
               onAnalyze={(p) => void analyze(p)}
               onLoadDemo={() => void loadDemo()}
+              onGithubFetch={(repoUrl) => void fetchGithub(repoUrl)}
             />
           )}
         </div>

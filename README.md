@@ -10,25 +10,17 @@ Live preview: https://mizcausevic-dev.github.io/codebase-bloat-tax/
 
 Browser-only analysis. Private GitHub OAuth is a disconnected server path, not mounted on Pages. The pink model box on the chart is `models/*` (five estimate modules), not only `bundleImpact.ts`. Paste-snippet and demo upload are first-class ingest paths that the chart collapses into "input acquisition."
 
-## Product
+## Method
 
-| Question | Answer |
-| --- | --- |
-| What | A local-first React app that turns manifests, lockfiles, optional bundler/CI artifacts, and import snippets into a labeled cost report. |
-| Who | Staff+ web/platform engineers and tech leads deciding what to measure or remove next. |
-| Why it wins | It refuses to treat package count as shipped JavaScript, shows the calculation on every card, and keeps security findings distinct from performance advice. |
-| Structure | `ingestion/` → `graph/` → optional `intelligence/` → pure `models/` → Zod `schemas/` → `ui/` + `export/`. |
-| Discover | Public GitHub repo, GitHub Pages preview, [pipeline visualization](docs/pipeline-viz-Cursor.html). |
-| Engage | Upload, public GitHub URL, snippet/OCR, or Load demo. |
-| Convert | Export PR-safe markdown or preview a warning-first GitHub Action (not auto-committed). |
-| Money | Potential time value under operator assumptions. This preview is not a paid product. |
-| Launch | Public GitHub repo and GitHub Pages preview. Private OAuth is a documented server path only. |
-| Improve after launch | Attach measured artifacts so recommendations can move from measure-first to remove/replace. |
+**What.** A local-first decision-support diagnostic. Manifests, lockfiles, optional bundler or CI artifacts, and import snippets become a labeled inventory and cost report.
 
-**Business goal:** help teams decide what to measure or remove next.  
-**Page goal:** complete one analysis.  
-**KPIs:** `analyses_completed` → `tool_complete`; `recommendation_exports` → `content_engagement_click`; `workflow_generated` → `self_serve_cta_click`.  
-Optional GTM hooks exist only as comments. GTM is not installed.
+**What it is not.** Not a paid product. Not a production security product. Not recovered payroll. Package count is not shipped JavaScript. Time-value is a labeled model and stays hidden until you opt in.
+
+**Evidence.** Strongest available of: production bundle / source map / metafile, CI timestamps, resolved lockfile, Bundlephobia advisory (never summed as your bundle), then package.json or import screenshot.
+
+**Who.** Staff+ web and platform engineers, and tech leads, deciding what to measure or remove next.
+
+This preview makes no production security-posture claim. Private OAuth is a documented server path only, not mounted on Pages. [Pipeline visualization](docs/pipeline-viz-Cursor.html).
 
 ## Filename suffix note
 
@@ -110,7 +102,7 @@ npm test
 npm run dev
 ```
 
-Pull requests run `.github/workflows/ci.yml` (`npm ci`, typecheck, test, production build). Push to `main` still publishes via `.github/workflows/pages.yml`.
+Pull requests run `.github/workflows/ci.yml` (`npm ci`, typecheck, test, production build). `main` requires a pull request and the `ci / check` job. Merges to `main` still publish via `.github/workflows/pages.yml`.
 
 Load demo uses `public/fixtures/demo/` (parser fixture, not an installable lockfile).
 

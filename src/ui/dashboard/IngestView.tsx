@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ingestTextFile, parseImportSnippet, type IngestedFile } from '../../ingestion/manifests';
-import { fetchPublicGithubManifests } from '../../ingestion/github';
 import { ocrImportScreenshot } from '../../ingestion/screenshots';
 import { ValidationError } from '../../ingestion/validate';
 
@@ -13,11 +12,12 @@ type Props = {
     repository?: { owner: string; name: string; ref: string; public: boolean };
   }) => void;
   onLoadDemo: () => void;
+  onGithubFetch: (url: string) => void;
   busy: boolean;
   error: string | null;
 };
 
-export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, busy, error }: Props) {
+export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, onGithubFetch, busy, error }: Props) {
   const [url, setUrl] = useState('');
   const [snippet, setSnippet] = useState('');
   const [oauthConfirm, setOauthConfirm] = useState(false);
@@ -81,14 +81,9 @@ export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, busy, error }:
         </p>
         <form
           className="field-stack"
-          onSubmit={async (e) => {
+          onSubmit={(e) => {
             e.preventDefault();
-            const { owner, repo, ref, files } = await fetchPublicGithubManifests(url);
-            onAnalyze({
-              sourceKind: 'github-public',
-              files,
-              repository: { owner, name: repo, ref, public: true },
-            });
+            onGithubFetch(url);
           }}
         >
           <label className="field-label" htmlFor="github-url">

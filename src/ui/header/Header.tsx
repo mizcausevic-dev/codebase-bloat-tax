@@ -15,7 +15,7 @@ export function Header(props: Props) {
   return (
     <header className="header">
       <div className="brand">
-        <img src={`${import.meta.env.BASE_URL}favicon.png`} alt="" width={44} height={44} />
+        <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" width={44} height={44} />
         <div>
           <h1>Codebase Bloat &amp; Technical Debt Tax</h1>
           <p>Decision support. Measured artifacts first. Estimates labeled.</p>

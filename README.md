@@ -4,6 +4,12 @@ Decision-support diagnostic for JS dependency inventory, bundle-risk signals, an
 
 This tool estimates dependency and delivery costs. It does not prove causality, measure real-user performance without field data, or guarantee that time-value estimates convert to recovered payroll.
 
+Live preview: https://mizcausevic-dev.github.io/codebase-bloat-tax/
+
+![Architecture](docs/architecture-Cursor.png)
+
+Browser-only analysis. Private GitHub OAuth is a disconnected server path, not mounted on Pages. The pink model box on the chart is `models/*` (five estimate modules), not only `bundleImpact.ts`. Paste-snippet and demo upload are first-class ingest paths that the chart collapses into "input acquisition."
+
 ## Product
 
 | Question | Answer |

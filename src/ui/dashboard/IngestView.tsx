@@ -53,22 +53,26 @@ export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, busy, error }:
             if (e.dataTransfer.files.length) void readFiles(e.dataTransfer.files);
           }}
         >
-          Drop files here
-          <div>
+          <p className="drop-title">Drop files here</p>
+          <label className="btn file-pick">
+            Choose files
             <input
               type="file"
+              className="visually-hidden"
               multiple
               onChange={(e) => e.target.files && void readFiles(e.target.files)}
             />
-          </div>
+          </label>
         </div>
         <p className="notice">
           Public npm / Bundlephobia / OSV lookups stay off until you enable them in Assumptions after the first local
           parse, or turn them on before a second run.
         </p>
-        <button type="button" className="btn primary" onClick={onLoadDemo} disabled={busy}>
-          Load demo
-        </button>
+        <div className="field-stack">
+          <button type="button" className="btn primary" onClick={onLoadDemo} disabled={busy}>
+            Load demo
+          </button>
+        </div>
       </motion.section>
 
       <motion.section className="glass card" initial={lowOverwhelm ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
@@ -76,17 +80,10 @@ export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, busy, error }:
         <p className="muted">
           Unauthenticated GitHub Contents API. Public repositories only. Host must be github.com.
         </p>
-        <input
-          type="url"
-          placeholder="https://github.com/owner/repo"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-        />
-        <button
-          type="button"
-          className="btn primary"
-          disabled={busy}
-          onClick={async () => {
+        <form
+          className="field-stack"
+          onSubmit={async (e) => {
+            e.preventDefault();
             const { owner, repo, ref, files } = await fetchPublicGithubManifests(url);
             onAnalyze({
               sourceKind: 'github-public',
@@ -95,8 +92,22 @@ export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, busy, error }:
             });
           }}
         >
-          Fetch public manifests
-        </button>
+          <label className="field-label" htmlFor="github-url">
+            Repository URL
+          </label>
+          <input
+            id="github-url"
+            type="url"
+            placeholder="https://github.com/owner/repo"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            autoComplete="off"
+            spellCheck={false}
+          />
+          <button type="submit" className="btn primary" disabled={busy || !url.trim()}>
+            Fetch public manifests
+          </button>
+        </form>
       </motion.section>
 
       <motion.section className="glass card" initial={lowOverwhelm ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
@@ -116,16 +127,18 @@ export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, busy, error }:
             understand Contents: read will be requested and the token is not stored.
           </label>
         )}
-        <button
-          type="button"
-          className="btn"
-          disabled={!oauthEnabled || !oauthConfirm}
-          onClick={() => {
-            throw new ValidationError('Private OAuth is not enabled in this preview.');
-          }}
-        >
-          Start private Contents: read
-        </button>
+        <div className="field-stack">
+          <button
+            type="button"
+            className="btn"
+            disabled={!oauthEnabled || !oauthConfirm}
+            onClick={() => {
+              throw new ValidationError('Private OAuth is not enabled in this preview.');
+            }}
+          >
+            Start private Contents: read
+          </button>
+        </div>
       </motion.section>
 
       <motion.section className="glass card" initial={lowOverwhelm ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
@@ -133,44 +146,55 @@ export function IngestView({ lowOverwhelm, onAnalyze, onLoadDemo, busy, error }:
         <p className="muted">
           Candidate inventory only. Cannot resolve versions, transitive deps, installed size, or shipped bundle cost.
         </p>
-        <textarea
-          rows={6}
-          placeholder={"import { z } from 'zod'\nimport React from 'react'"}
-          value={snippet}
-          onChange={(e) => setSnippet(e.target.value)}
-        />
-        <button
-          type="button"
-          className="btn primary"
-          disabled={busy}
-          onClick={() => {
-            const packages = parseImportSnippet(snippet);
-            onAnalyze({
-              sourceKind: 'snippet',
-              files: [ingestTextFile('imports.ts', snippet)],
-              snippetPackages: packages,
-            });
-          }}
-        >
-          Analyze snippet
-        </button>
-        <label className="muted">
-          Screenshot OCR (Tesseract in this browser)
-          <input
-            type="file"
-            accept="image/*"
-            onChange={async (e) => {
-              const file = e.target.files?.[0];
-              if (!file) return;
-              const result = await ocrImportScreenshot(file);
+        <div className="field-stack">
+          <label className="field-label" htmlFor="import-snippet">
+            Import block
+          </label>
+          <textarea
+            id="import-snippet"
+            rows={6}
+            placeholder={"import { z } from 'zod'\nimport React from 'react'"}
+            value={snippet}
+            onChange={(e) => setSnippet(e.target.value)}
+          />
+          <button
+            type="button"
+            className="btn primary"
+            disabled={busy || !snippet.trim()}
+            onClick={() => {
+              const packages = parseImportSnippet(snippet);
               onAnalyze({
-                sourceKind: 'screenshot',
-                files: [{ name: file.name, role: 'screenshot', bytes: file.size }],
-                snippetPackages: result.packages,
+                sourceKind: 'snippet',
+                files: [ingestTextFile('imports.ts', snippet)],
+                snippetPackages: packages,
               });
             }}
-          />
-        </label>
+          >
+            Analyze snippet
+          </button>
+        </div>
+        <div className="ocr-block">
+          <p className="field-label">Screenshot OCR</p>
+          <p className="muted">Runs Tesseract in this browser. Candidate names only. The image is not uploaded.</p>
+          <label className="btn file-pick">
+            Choose image
+            <input
+              type="file"
+              className="visually-hidden"
+              accept="image/*"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const result = await ocrImportScreenshot(file);
+                onAnalyze({
+                  sourceKind: 'screenshot',
+                  files: [{ name: file.name, role: 'screenshot', bytes: file.size }],
+                  snippetPackages: result.packages,
+                });
+              }}
+            />
+          </label>
+        </div>
       </motion.section>
       {error ? <p className="error">{error}</p> : null}
     </div>

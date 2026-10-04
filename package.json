@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
   },
   "dependencies": {
-    "framer-motion": "^12.23.12",
+    "framer-motion": "^13.4.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "tesseract.js": "^6.0.1",
